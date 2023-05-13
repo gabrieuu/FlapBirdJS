@@ -1,38 +1,154 @@
 const largura = 1280;
 const altura = 720;
+
 const velocidade_chao = 5;
-let canvas
 
 let piso;
 let bird;
 let tubos = []
-let caindo = false; 
+let caindo = false;
 
+let canvas;
+
+let img_logo
+
+function preload(){
+  img_logo = loadImage("logo.png")
+}
 function setup() {
   canvas = createCanvas(largura, altura);
   windowResized();
   piso = new Piso();
   passaro = new Passaro();
   tubos.push(new Tubo())  
+  
 }
 
 let contadortubos = 0;
 
+let tela = 0;
+
 function draw() {
+  cursor(ARROW);
+ background("#e6e6e6")
   
-  background("dodgerblue");
-  for (const tubo of tubos){
-    tubo.desenhar();
+  if(tela == 0){
+    menu();
   }
+  if(tela == 1){
+    tela1();
+  }
+  if(tela == 2){
+    tela2();
+  }
+  if(tela == 3){
+    tela3();
+  }
+  
+ 
+  
+}
+
+function tela1(){
+  if(tela == 1){ 
+   background("dodgerblue");
+    for (const tubo of tubos){
+      tubo.desenhar();
+    }
   piso.desenhar();
   passaro.desenhar();
   if(contadortubos * velocidade_chao % 400 == 0){
-    tubos.push(new Tubo());
-  }
+      tubos.push(new Tubo());
+    }
   if(caindo){
-    contadortubos++;
+      contadortubos++;
+    }
+    voltar()
   }
+}
+function tela2(){
+  if(tela == 2){
+    background("#e6e6e6")
+    voltar()
+  }
+
+}
+function tela3(){
+  if(tela == 3){
+    background("#e6e6e6")
+    voltar()
+  }
+
+}
+function menu(){
+   
+  cursor(ARROW);
+  fill("#8dc63f");
+  noStroke();
+  rect(360,height/2.5,600,50,20);
+  rect(360,height/2,600,50,20);
+  rect(360,height/1.7,600,50,20);
+  textos()
   
+  image(img_logo,450,40,400,200)
+
+  if(mouseX >=360 && mouseX<=960 && mouseY>=height/2.5 && mouseY<=(height/2.5)+50){
+    cursor(HAND);
+    noFill();   
+    stroke(54,128,193);
+    rect(360,height/2.5,600,50,20);
+    if(mouseIsPressed){
+      tela = 1;
+      console.log(tela)
+    }
+    
+  }
+  else if(mouseX >=360 && mouseX<=960 && mouseY>=height/2 && mouseY<=(height/2)+50){
+    cursor(HAND);
+    noFill();   
+    stroke(54,128,193);
+    rect(360,height/2,600,50,20);
+    if(mouseIsPressed){
+      tela = 2;
+    }
+  }
+  else if(mouseX >=360 && mouseX<=960 && mouseY>=height/1.7 && mouseY<=(height/1.7)+50){
+    cursor(HAND);
+    noFill();   
+    stroke(54,128,193);
+    rect(360,height/1.7,600,50,20);
+    if(mouseIsPressed){
+      tela = 3;
+    }
+    
+  }
+
+}
+function voltar(){
+  
+  fill("#fff")
+  rect(width/2, 3, 100,40,10)
+  noStroke()
+  textSize(20);
+  textAlign(CENTER);
+  fill("#000");
+  text("Home",690 ,29);
+
+  if(mouseX >= width/2 && mouseX <= (width/2)+100 && mouseY>=3 && mouseY <= 43){
+    cursor(HAND)
+    if(mouseIsPressed){
+      tela = 0;
+      menu();
+    }
+  }
+}
+function textos(){
+  textSize(30);
+  textAlign(CENTER);
+  fill("#fff");
+  text("Iniciar",670 ,323);
+  text("Controles",670, 395);
+  text("Sobre",670, 460);
 }
 
 function windowResized() {
@@ -42,7 +158,7 @@ function windowResized() {
 }
 
 function keyPressed(){
-  click();
+    click();
 }
 function mousePressed(){
   click();
@@ -129,7 +245,7 @@ function Piso() {
     fill("wheat");
     rect(this.x, this.y, this.w, this.h);
   }
-this.areaColision = function(){ //cria a area que o passaro não de passar
+this.areaColision = function(){ //cria a area que o passaro não pode passar
 return new Rectangle(this.x, this.y, this.w, this.h);
 }
 }
